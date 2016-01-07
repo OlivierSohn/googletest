@@ -35,21 +35,31 @@
 export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR
 export DYLD_LIBRARY_PATH=$BUILT_PRODUCTS_DIR
 
-# Create some executables.
+executables_path=$1
+shift
+
+config=$1
+shift
+
+report_path_relative=$1
+shift
+
 test_executables=$@
 
-# Now execute each one in turn keeping track of how many succeeded and failed.
 succeeded=0
 failed=0
 failed_list=()
 for test in ${test_executables[*]}; do
-  "$test"
+  xml_report_relative="${report_path_relative}/${test}.${config}.xml"
+  executable="${executables_path}/${test}"
+  echo report : $xml_report_relative
+  "${executable}" "--gtest_output=xml:${xml_report_relative}"
   result=$?
   if [ $result -eq 0 ]; then
     succeeded=$(( $succeeded + 1 ))
   else
     failed=$(( failed + 1 ))
-    failed_list="$failed_list $test"
+    failed_list="$failed_list $executable"
   fi
 done
 
