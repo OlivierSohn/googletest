@@ -64,6 +64,7 @@
 #include "gtest/gtest_prod.h"
 #include "gtest/gtest-test-part.h"
 #include "gtest/gtest-typed-test.h"
+#include "gtest/gtest-imajuscule.h"
 
 // Depending on the platform, different string classes are available.
 // On Linux, in addition to ::std::string, Google also makes use of
