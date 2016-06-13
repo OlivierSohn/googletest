@@ -38,3 +38,5 @@
 #else
 #   define EXPECT_DEBUG_ASSERT(x) (x);
 #endif
+
+#define EXPECT_QUAT_EQ( a, b )  EXPECT_TRUE(1.f - glm::dot(a,b) < FLOAT_EPSILON);
