@@ -28,14 +28,45 @@
 
 #pragma once
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#endif
+
+
+#ifdef HAS_KILLED_BY_SIGNAL
+#  error "redefining HAS_KILLED_BY_SIGNAL"
+#endif
+
+#if TARGET_OS_IOS || _WIN32
+#  define HAS_KILLED_BY_SIGNAL 0
+#else
+#  define HAS_KILLED_BY_SIGNAL 1
+#endif
+
+
+#ifdef HAS_EXITED_WITH_CODE
+#  error "redefining HAS_EXITED_WITH_CODE"
+#endif
+
+#if TARGET_OS_IOS
+#  define HAS_EXITED_WITH_CODE 0
+#else
+#  define HAS_EXITED_WITH_CODE 1
+#endif
+
+
 
 #ifndef NDEBUG
-#   ifdef _WIN32
+// debug mode
+#   if HAS_KILLED_BY_SIGNAL
+#       define EXPECT_DEBUG_ASSERT(x) ASSERT_EXIT((x), ::testing::KilledBySignal(SIGABRT), "");
+#   elif HAS_EXITED_WITH_CODE
 #       define EXPECT_DEBUG_ASSERT(x) ASSERT_EXIT((x), ::testing::ExitedWithCode(3), "");
 #   else
-#       define EXPECT_DEBUG_ASSERT(x) ASSERT_EXIT((x), ::testing::KilledBySignal(SIGABRT), "");
+#       define EXPECT_DEBUG_ASSERT(x) do {} while( 0 );
 #   endif
 #else
+// release mode
 #   define EXPECT_DEBUG_ASSERT(x) (x);
 #endif
 
