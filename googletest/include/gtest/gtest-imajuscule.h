@@ -67,7 +67,7 @@
 #   endif
 #else
 // release mode
-#   define EXPECT_DEBUG_ASSERT(x) (x);
+#   define EXPECT_DEBUG_ASSERT(x) do {} while( 0 );
 #endif
 
 #define EXPECT_QUAT_EQ( a, b )  EXPECT_TRUE(1.f - glm::dot(a,b) < FLOAT_EPSILON);
